@@ -1,5 +1,5 @@
 import { createServer } from './app.js';
-import sequelize from './config/config.js';
+import sequelize from './src/config/config.js';
 //import './models/associations.ts';
 
 const connectDB = async () => {
