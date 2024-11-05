@@ -4,6 +4,7 @@ import AppError from '../utils/app_error.js';
 import createSendToken from '../utils/jwt_helper.js';
 import { uploadPhotoBufferToCloudinary } from '../utils/cloudinary_upload.js';
 
+
 export default class Authentication {
   static async signUp(req, res, next) {
     const { firstName, lastName, email, password } = req.body;

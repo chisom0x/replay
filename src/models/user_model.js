@@ -32,8 +32,18 @@ User.init({
     type: DataTypes.STRING(128),
     allowNull: false,
   },
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+    allowNull: false,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+    allowNull: false,
+  },
 }, {
-  sequelize, // Pass the sequelize instance
+  sequelize, 
   tableName: 'users',
   timestamps: true,
   hooks: {
