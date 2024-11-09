@@ -4,11 +4,9 @@ import AppError from '../utils/app_error.js';
 import createSendToken from '../utils/jwt_helper.js';
 import { uploadPhotoBufferToCloudinary } from '../utils/cloudinary_upload.js';
 
-
 export default class Authentication {
   static async signUp(req, res, next) {
     const { firstName, lastName, email, password } = req.body;
-    const photo = req.file;
     try {
       if (!firstName)
         return next(new AppError('Please enter your first name!', 400));
@@ -24,14 +22,11 @@ export default class Authentication {
 
       if (userExists) return next(new AppError('email already in use!', 400));
 
-      const photoUrl = await uploadPhotoBufferToCloudinary(photo.buffer);
-
       const user = await UserService.createUser(
         firstName,
         lastName,
         email,
-        password,
-        photoUrl
+        password
       );
       return createSendToken(user, 200, res);
     } catch (error) {

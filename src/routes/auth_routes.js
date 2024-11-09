@@ -4,7 +4,7 @@ import upload from '../middlewares/multer.js';
 
 const router = Router();
 
-router.post('/signup', upload.single('photo'), Authentication.signUp);
+router.post('/signup', Authentication.signUp);
 router.post('/login', Authentication.login)
 
 export default router;
