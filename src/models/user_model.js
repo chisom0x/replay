@@ -26,7 +26,7 @@ User.init({
   email: {
     type: DataTypes.STRING(128),
     allowNull: false,
-    unique: true,
+   // unique: true,
   },
   password: {
     type: DataTypes.STRING(128),
