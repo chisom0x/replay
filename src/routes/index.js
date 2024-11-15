@@ -9,9 +9,9 @@ import Authorization from '../middlewares/authorization.js';
 const router = Router();
 
 router.use('/auth', authRouter);
-router.use('/gallery', Authorization.verifyToken, galleryRouter);
-router.use('/file', Authorization.verifyToken, fileRouter);
-router.use('/stats', Authorization.verifyToken, statsRouter);
-router.use('/user', Authorization.verifyToken, userRouter);
+router.use('/gallery', galleryRouter);
+router.use('/file',  fileRouter);
+router.use('/stats',  statsRouter);
+router.use('/user',  userRouter);
 
 export default router;
