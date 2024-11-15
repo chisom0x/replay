@@ -16,7 +16,7 @@ export default class Authorization {
       }
       if (!token) {
         return next(
-          errorResponse(res, 'you are not logged in!.. please log in')
+          errorResponse(res, 400, 'you are not logged in!.. please log in')
         );
       }
       const decoded = jwt.verify(token, process.env.JWT_SECRET);

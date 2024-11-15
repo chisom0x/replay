@@ -1,12 +1,13 @@
 import Gallery from '../models/gallery_model.js';
 
 export default class galleryService {
-  static async createGallery(userId, title, galleryKey) {
+  static async createGallery(userId, title, galleryKey, qrCode) {
     try {
       const newGallery = await Gallery.create({
         userId: userId,
         title: title,
         galleryKey: galleryKey,
+        qrCode: qrCode
       });
       return newGallery;
     } catch (error) {

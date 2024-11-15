@@ -18,6 +18,11 @@ Gallery.init(
       type: DataTypes.STRING(128),
       allowNull: false,
     },
+    qrCode: {
+      type: DataTypes.STRING,
+      defaultValue: 'qr_link',
+      allowNull: false,
+    },
     galleryKey: {
       type: DataTypes.STRING(128),
       allowNull: false,

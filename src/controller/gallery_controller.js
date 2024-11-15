@@ -1,5 +1,6 @@
 import AppError from '../utils/app_error.js';
 import { uploadPhotoBufferToCloudinary } from '../utils/cloudinary_upload.js';
+import genQr from '../utils/qr.js';
 import { successResponse } from '../utils/response.js';
 import Authorization from '../middlewares/authorization.js';
 import galleryService from '../services/gallery_service.js';
@@ -28,7 +29,17 @@ export default class galleryController {
       if (!galleryKey)
         return next(new AppError('failed to generate a galleryKey!', 500));
 
-      await galleryService.createGallery(userId, title, galleryKey);
+      const qrCode = await genQr('https://replay-delta.vercel.app/');
+
+      if (!qrCode)
+        return next(new AppError('failed to generate a QR Code!', 500));
+
+      const qrCodeUrl = await uploadPhotoBufferToCloudinary(qrCode)
+
+      if (!qrCodeUrl)
+        return next(new AppError('failed to upload QR Code!', 500));
+
+      await galleryService.createGallery(userId, title, galleryKey, qrCodeUrl);
 
       return successResponse(res, null);
     } catch (error) {
@@ -106,6 +117,7 @@ export default class galleryController {
         title: gallery.title,
         linkActive: gallery.linkActive,
         galleryId: gallery.id,
+        qrCode: gallery.qrCode
       };
 
       return successResponse(res, data);
