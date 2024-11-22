@@ -1,8 +1,6 @@
 import AppError from '../utils/app_error.js';
 import { uploadPhotoBufferToCloudinary } from '../utils/cloudinary_upload.js';
 import { successResponse } from '../utils/response.js';
-import Authorization from '../middlewares/authorization.js';
-import galleryService from '../services/gallery_service.js';
 import fileService from '../services/files_service.js';
 
 export default class fileController {

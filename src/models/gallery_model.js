@@ -6,7 +6,7 @@ class Gallery extends Model {}
 Gallery.init(
   {
     id: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
@@ -28,7 +28,7 @@ Gallery.init(
       allowNull: false,
     },
     fileCount: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER,
       defaultValue: 0,
       allowNull: false,
     },

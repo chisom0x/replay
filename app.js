@@ -4,7 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import cookieParser from 'cookie-parser';
-import hpp from 'hpp'
+import hpp from 'hpp';
 import router from './src/routes/index.js';
 import globalErrorHandler from './src/utils/global_error_handler.js';
 
@@ -16,7 +16,7 @@ const corsOptions = {
 };
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, 
+  windowMs: 15 * 60 * 1000,
   max: 100,
   message: 'Too many requests, please try again later.',
 });
@@ -24,16 +24,17 @@ const limiter = rateLimit({
 export const createServer = () => {
   const app = express();
 
+  app.set('trust proxy', true);
+
   app.use(cors(corsOptions));
   app.options('*', cors(corsOptions));
   app.use(express.json());
   app.use(cookieParser());
   app.use(helmet());
-  app.use(hpp())
-  app.use('/api', limiter)
+  app.use(hpp());
+  app.use('/api', limiter);
 
   app.use(globalErrorHandler);
-
 
   app.use('/api/v1/replay', router);
 

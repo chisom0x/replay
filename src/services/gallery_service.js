@@ -58,15 +58,15 @@ export default class galleryService {
   static async deleteGallery(galleryId) {
     try {
       const gallery = await Gallery.findByPk(galleryId);
-
-      if (!gallery || gallery === 0) {
-        return new Error('gallery not found!');
+  
+      if (!gallery) {
+        throw new Error('Gallery not found!');
       }
-
+  
       await gallery.destroy();
       return true;
     } catch (error) {
       throw error;
     }
   }
-}
+}  
