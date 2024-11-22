@@ -34,13 +34,12 @@ export const createServer = () => {
   app.use(hpp());
   app.use('/api', limiter);
 
-  app.use(globalErrorHandler);
-
-  app.use('/api/v1/replay', router);
-
   app.get('/', (req, res) => {
     res.json({ message: 'Hello World' });
   });
+
+  app.use('/api/v1/replay', router);
+  app.use(globalErrorHandler);
 
   return app;
 };
