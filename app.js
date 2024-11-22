@@ -24,7 +24,7 @@ const limiter = rateLimit({
 export const createServer = () => {
   const app = express();
 
-  app.set('trust proxy', true);
+  app.set('trust proxy', 1);
 
   app.use(cors(corsOptions));
   app.options('*', cors(corsOptions));
