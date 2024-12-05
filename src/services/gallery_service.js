@@ -7,7 +7,7 @@ export default class galleryService {
         userId: userId,
         title: title,
         galleryKey: galleryKey,
-        qrCode: qrCode
+        qrCode: qrCode,
       });
       return newGallery;
     } catch (error) {
@@ -28,6 +28,19 @@ export default class galleryService {
     }
   }
 
+  static async findGalleryByUniqueKey(key) {
+    try {
+      const gallery = await Gallery.findOne({
+        where: {
+          galleryKey: key,
+        },
+      });
+      return gallery;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async findGallery(galleryId) {
     try {
       const gallery = await Gallery.findByPk(galleryId);
@@ -37,7 +50,7 @@ export default class galleryService {
     }
   }
 
-  static async updateGalleryDetails(galleryId,  title, linkActive ) {
+  static async updateGalleryDetails(galleryId, title, linkActive) {
     try {
       const gallery = await Gallery.findByPk(galleryId);
 
@@ -58,15 +71,15 @@ export default class galleryService {
   static async deleteGallery(galleryId) {
     try {
       const gallery = await Gallery.findByPk(galleryId);
-  
+
       if (!gallery) {
         throw new Error('Gallery not found!');
       }
-  
+
       await gallery.destroy();
       return true;
     } catch (error) {
       throw error;
     }
   }
-}  
+}

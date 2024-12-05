@@ -1,4 +1,3 @@
-
 export function successResponse(res, data) {
     return res.status(200).json({
       status: true,

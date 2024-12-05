@@ -4,6 +4,7 @@ import galleryRouter from './gallery_routes.js';
 import fileRouter from './file_routes.js';
 import statsRouter from './stats_routes.js';
 import userRouter from './user_routes.js';
+import publicRouter from './public_routes.js';
 import Authorization from '../middlewares/authorization.js';
 
 const router = Router();
@@ -13,5 +14,6 @@ router.use('/gallery', Authorization.verifyToken, galleryRouter);
 router.use('/file', Authorization.verifyToken, fileRouter);
 router.use('/stats', Authorization.verifyToken, statsRouter);
 router.use('/user', Authorization.verifyToken, userRouter);
+router.use('/public', publicRouter);
 
 export default router;

@@ -34,7 +34,7 @@ export default class galleryController {
       if (!qrCode)
         return next(new AppError('failed to generate a QR Code!', 500));
 
-      const qrCodeUrl = await uploadPhotoBufferToCloudinary(qrCode)
+      const qrCodeUrl = await uploadPhotoBufferToCloudinary(qrCode);
 
       if (!qrCodeUrl)
         return next(new AppError('failed to upload QR Code!', 500));
@@ -117,7 +117,41 @@ export default class galleryController {
         title: gallery.title,
         linkActive: gallery.linkActive,
         galleryId: gallery.id,
-        qrCode: gallery.qrCode
+        qrCode: gallery.qrCode,
+      };
+
+      return successResponse(res, data);
+    } catch (error) {
+      return next(error);
+    }
+  }
+  static async getGalleryDetailsByKey(req, res, next) {
+    try {
+      const galleryKey = req.params.galleryKey;
+
+      if (!galleryKey)
+        return next(new AppError('please provide a gallery key!', 400));
+
+      const gallery = await galleryService.findGalleryByUniqueKey(galleryKey);
+
+      if (!gallery)
+        return next(new AppError('please provide a valid gallery id!', 400));
+
+      const files = await fileService.findAllFilesByGallery(gallery.id);
+
+      let fileResponse = [];
+
+      for (const file of files) {
+        fileResponse.push({
+          link: file.link,
+        });
+      }
+
+      const data = {
+        linkActive: gallery.linkActive,
+        title: gallery.title,
+        galleryId: gallery.id,
+        files: fileResponse,
       };
 
       return successResponse(res, data);
