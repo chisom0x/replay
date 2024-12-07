@@ -10,7 +10,7 @@ export default class galleryController {
   static async addGallery(req, res, next) {
     function generateUniqueCode() {
       const characters =
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        'abcdefghijklmnopqrstuvwxyz0123456789';
       let result = '';
 
       for (let i = 0; i < 6; i++) {
@@ -29,7 +29,7 @@ export default class galleryController {
       if (!galleryKey)
         return next(new AppError('failed to generate a galleryKey!', 500));
 
-      const qrCode = await genQr('https://replay-delta.vercel.app/');
+      const qrCode = await genQr(`https://replay-delta.vercel.app/${galleryKey}`);
 
       if (!qrCode)
         return next(new AppError('failed to generate a QR Code!', 500));
@@ -80,7 +80,7 @@ export default class galleryController {
       let data = {
         title: gallery.title,
         fileCount: gallery.fileCount,
-        galleryLink: `https:www.replay.com/${gallery.galleryKey}/${gallery.title}`,
+        galleryLink: `https://replay-delta.vercel.app/uid${gallery.galleryKey}`,
         galleryId: gallery.id,
         files: [],
       };
@@ -150,6 +150,7 @@ export default class galleryController {
       const data = {
         linkActive: gallery.linkActive,
         title: gallery.title,
+        galleryLink: `https://replay-delta.vercel.app/uid${gallery.galleryKey}`,
         galleryId: gallery.id,
         files: fileResponse,
       };
