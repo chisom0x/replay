@@ -19,7 +19,18 @@ export default class fileController {
         await fileService.addFile(galleryId, fileUrl);
       }
 
-      return successResponse(res, null);
+      const allFiles = await fileService.findAllFilesByGallery(galleryId);
+
+      let fileResponse = [];
+
+      for (const file of allFiles) {
+        fileResponse.push({
+          link: file.link,
+          fileId: file.id,
+        });
+      }
+
+      return successResponse(res, fileResponse);
     } catch (error) {
       return next(error);
     }
@@ -28,7 +39,7 @@ export default class fileController {
     try {
       const fileId = req.params.fileId;
 
-      if(!fileId) return next(new AppError('provide a file id!', 400))
+      if (!fileId) return next(new AppError('provide a file id!', 400));
 
       await fileService.deleteFile(fileId);
 
