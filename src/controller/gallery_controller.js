@@ -80,7 +80,7 @@ export default class galleryController {
       let data = {
         title: gallery.title,
         fileCount: gallery.fileCount,
-        galleryLink: `https://replay-delta.vercel.app/uid${gallery.galleryKey}`,
+        galleryLink: `https://replay-delta.vercel.app/${gallery.galleryKey}`,
         galleryId: gallery.id,
         files: [],
       };
@@ -150,7 +150,7 @@ export default class galleryController {
       const data = {
         linkActive: gallery.linkActive,
         title: gallery.title,
-        galleryLink: `https://replay-delta.vercel.app/uid${gallery.galleryKey}`,
+        galleryLink: `https://replay-delta.vercel.app/${gallery.galleryKey}`,
         galleryId: gallery.id,
         files: fileResponse,
       };
