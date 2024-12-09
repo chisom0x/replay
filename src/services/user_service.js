@@ -13,7 +13,6 @@ export default class UserService {
 
       return newUser;
     } catch (error) {
-      console.error(error);
       throw error;
     }
   }

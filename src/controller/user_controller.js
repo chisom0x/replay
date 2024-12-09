@@ -2,10 +2,9 @@ import AppError from '../utils/app_error.js';
 import { uploadPhotoBufferToCloudinary } from '../utils/cloudinary_upload.js';
 import { errorResponse, successResponse } from '../utils/response.js';
 import Authorization from '../middlewares/authorization.js';
-import galleryService from '../services/gallery_service.js';
-import fileService from '../services/files_service.js';
 import bcrypt from 'bcryptjs';
 import UserService from '../services/user_service.js';
+import UserValidations from '../validations/user_validations.js';
 
 export default class userController {
   static async getUserData(req, res, next) {
@@ -13,6 +12,7 @@ export default class userController {
       const userId = await Authorization.loggedInUserId(req, res);
       if (!userId)
         return next(new AppError('logged in user id is invalid!', 400));
+
       const user = await UserService.findUserById(userId);
 
       return successResponse(res, {
@@ -28,6 +28,12 @@ export default class userController {
 
   static async updateUserData(req, res, next) {
     try {
+      const { error } = UserValidations.validateUpdateUserData({
+        body: req.body,
+        file: req.fileService,
+      });
+      if (error) return next(new AppError(error.details[0].message, 400));
+
       const userId = await Authorization.loggedInUserId(req, res);
       const { firstName, lastName, email } = req.body;
       const photo = req.fileService;
@@ -47,7 +53,6 @@ export default class userController {
       };
 
       const user = await UserService.findUserById(userId);
-
       const photoUrl = await getPhotoUrl(photo, user.photo);
 
       await UserService.updateUserInfo(
@@ -66,34 +71,25 @@ export default class userController {
 
   static async updateUserPassword(req, res, next) {
     try {
+      const { error } = UserValidations.validateUpdateUserPassword(req.body);
+      if (error) return next(new AppError(error.details[0].message, 400));
+
       const userId = await Authorization.loggedInUserId(req, res);
-      console.log(userId)
       const { oldPassword, newPassword } = req.body;
-  
-      if (!oldPassword) {
-        return next(new AppError('Please enter your old password!'));
-      }
-      if (!newPassword) {
-        return next(new AppError('Please enter your new password!'));
-      }
-  
-      // Find user by ID
+
       const user = await UserService.findUserById(userId);
-  
-      // Check if the old password matches
+
       const isMatch = await bcrypt.compare(oldPassword, user.password);
       if (!isMatch) {
         return errorResponse(res, 400, 'Old password is incorrect');
       }
 
-  
-      // Save the updated user
+      user.password = await bcrypt.hash(newPassword, 12);
       await user.save();
-  
+
       return successResponse(res, 'Password updated successfully');
     } catch (error) {
       return next(error);
     }
   }
-  
 }

@@ -1,8 +1,8 @@
-import Authentication from '../../controller/auth_controller.js';
 import UserService from '../../services/user_service.js';
 import bcrypt from 'bcryptjs';
 import createSendToken from '../../utils/jwt_helper.js';
 import AppError from '../../utils/app_error.js';
+import Authentication from '../../controller/auth_controller.js';
 
 jest.mock('../../services/user_service.js');
 jest.mock('bcryptjs');
@@ -32,7 +32,7 @@ describe('Authentication Controller', () => {
       };
       await Authentication.signUp(mockReq, mockRes, mockNext);
       expect(mockNext).toHaveBeenCalledWith(
-        new AppError('Please enter your first name!', 400)
+        new AppError('"firstName" is required', 400)
       );
     });
 
@@ -44,7 +44,7 @@ describe('Authentication Controller', () => {
       };
       await Authentication.signUp(mockReq, mockRes, mockNext);
       expect(mockNext).toHaveBeenCalledWith(
-        new AppError('please enter your lastname!', 400)
+        new AppError('"lastName" is required', 400)
       );
     });
 
@@ -56,7 +56,7 @@ describe('Authentication Controller', () => {
       };
       await Authentication.signUp(mockReq, mockRes, mockNext);
       expect(mockNext).toHaveBeenCalledWith(
-        new AppError('please enter your email address!', 400)
+        new AppError('"email" is required', 400)
       );
     });
 
@@ -68,7 +68,7 @@ describe('Authentication Controller', () => {
       };
       await Authentication.signUp(mockReq, mockRes, mockNext);
       expect(mockNext).toHaveBeenCalledWith(
-        new AppError('please set a password!', 400)
+        new AppError('"password" is required', 400)
       );
     });
 
@@ -82,7 +82,7 @@ describe('Authentication Controller', () => {
       };
       await Authentication.signUp(mockReq, mockRes, mockNext);
       expect(mockNext).toHaveBeenCalledWith(
-        new AppError('email already in use!', 400)
+        new AppError('Email already in use!', 400)
       );
     });
 
@@ -121,7 +121,7 @@ describe('Authentication Controller', () => {
       mockReq.body = { password: 'password123' };
       await Authentication.login(mockReq, mockRes, mockNext);
       expect(mockNext).toHaveBeenCalledWith(
-        new AppError('please enter your email address', 400)
+        new AppError('"email" is required', 400)
       );
     });
 
@@ -129,7 +129,7 @@ describe('Authentication Controller', () => {
       mockReq.body = { email: 'test@example.com' };
       await Authentication.login(mockReq, mockRes, mockNext);
       expect(mockNext).toHaveBeenCalledWith(
-        new AppError('please enter a password', 400)
+        new AppError('"password" is required', 400)
       );
     });
 
@@ -141,7 +141,7 @@ describe('Authentication Controller', () => {
       await Authentication.login(mockReq, mockRes, mockNext);
 
       expect(mockNext).toHaveBeenCalledWith(
-        new AppError('incorrect email or password!', 400)
+        new AppError('Incorrect email or password!', 400)
       );
     });
 
@@ -155,7 +155,7 @@ describe('Authentication Controller', () => {
       await Authentication.login(mockReq, mockRes, mockNext);
 
       expect(mockNext).toHaveBeenCalledWith(
-        new AppError('incorrect email or password!', 400)
+        new AppError('Incorrect email or password!', 400)
       );
     });
 

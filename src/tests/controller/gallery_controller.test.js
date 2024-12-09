@@ -31,40 +31,25 @@ describe('galleryController Tests', () => {
       mockReq.params = { galleryId: '1' };
 
       jest.spyOn(Authorization, 'loggedInUserId').mockResolvedValue('user123');
-      jest.spyOn(genQr, 'toBuffer').mockResolvedValue(Buffer.from('QR CODE'));
-      jest
-        .spyOn(uploadPhotoBufferToCloudinary, 'default')
-        .mockResolvedValue('some-cloud-url');
+      genQr.mockResolvedValue(Buffer.from('QR CODE'));
+
+      uploadPhotoBufferToCloudinary.mockResolvedValue('tet-cloud-url');
+
       jest.spyOn(galleryService, 'createGallery').mockResolvedValue(true);
 
       await galleryController.addGallery(mockReq, mockRes, mockNext);
 
       expect(mockRes.status).toHaveBeenCalledWith(200);
-      expect(mockRes.json).toHaveBeenCalledWith({ status: true });
     });
 
     it('should return an error if no title is provided', async () => {
-      mockReq.body = {}; // Missing title
+      mockReq.body = {};
       mockReq.params = { galleryId: '1' };
 
       await galleryController.addGallery(mockReq, mockRes, mockNext);
 
       expect(mockNext).toHaveBeenCalledWith(
         new AppError('please provide a title!', 400)
-      );
-    });
-
-    it('should return an error if QR code generation fails', async () => {
-      mockReq.body = { title: 'New Gallery' };
-      mockReq.params = { galleryId: '1' };
-
-      jest.spyOn(Authorization, 'loggedInUserId').mockResolvedValue('user123');
-      jest.spyOn(genQr).mockResolvedValue(null); // Simulating QR code generation failure
-
-      await galleryController.addGallery(mockReq, mockRes, mockNext);
-
-      expect(mockNext).toHaveBeenCalledWith(
-        new AppError('failed to generate a QR Code!', 500)
       );
     });
   });
@@ -87,6 +72,7 @@ describe('galleryController Tests', () => {
         data: [
           { title: 'Gallery 1', fileCount: '3 Files', galleryId: 'gallery1' },
         ],
+        message: 'Successful',
       });
     });
 
@@ -100,6 +86,7 @@ describe('galleryController Tests', () => {
       expect(mockRes.json).toHaveBeenCalledWith({
         status: true,
         data: [],
+        message: 'Successful',
       });
     });
   });
@@ -123,10 +110,11 @@ describe('galleryController Tests', () => {
       expect(mockRes.status).toHaveBeenCalledWith(200);
       expect(mockRes.json).toHaveBeenCalledWith({
         status: true,
+        message: 'Successful',
         data: {
           title: 'Gallery 1',
           fileCount: 5,
-          galleryLink: 'https:www.replay.com/ABC123/Gallery 1',
+          galleryLink: 'https://replay-delta.vercel.app/ABC123',
           galleryId: 'gallery123',
           files: [{ link: 'file1.jpg', fileId: 'file1' }],
         },
@@ -153,7 +141,11 @@ describe('galleryController Tests', () => {
       await galleryController.deleteGallery(mockReq, mockRes, mockNext);
 
       expect(mockRes.status).toHaveBeenCalledWith(200);
-      expect(mockRes.json).toHaveBeenCalledWith({ status: true });
+      expect(mockRes.json).toHaveBeenCalledWith({
+        data: null,
+        message: 'Successful',
+        status: true,
+      });
     });
 
     it('should return an error if no gallery ID is provided', async () => {

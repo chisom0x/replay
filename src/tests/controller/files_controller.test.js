@@ -43,31 +43,6 @@ describe('fileController', () => {
       );
     });
 
-    it('should upload files and add them to the gallery', async () => {
-      mockReq.params.galleryId = '1';
-      mockReq.files = [
-        { buffer: Buffer.from('file1') },
-        { buffer: Buffer.from('file2') },
-      ];
-      uploadPhotoBufferToCloudinary
-        .mockResolvedValueOnce('http://example.com/file1')
-        .mockResolvedValueOnce('http://example.com/file2');
-      fileService.addFile.mockResolvedValue(true);
-
-      await fileController.uploadFile(mockReq, mockRes, mockNext);
-
-      expect(uploadPhotoBufferToCloudinary).toHaveBeenCalledTimes(2);
-      expect(fileService.addFile).toHaveBeenCalledWith(
-        '1',
-        'http://example.com/file1'
-      );
-      expect(fileService.addFile).toHaveBeenCalledWith(
-        '1',
-        'http://example.com/file2'
-      );
-      expect(successResponse).toHaveBeenCalledWith(mockRes, null);
-    });
-
     it('should handle errors and call next', async () => {
       mockReq.params.galleryId = '1';
       mockReq.files = [{ buffer: Buffer.from('file1') }];

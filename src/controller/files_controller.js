@@ -2,17 +2,18 @@ import AppError from '../utils/app_error.js';
 import { uploadPhotoBufferToCloudinary } from '../utils/cloudinary_upload.js';
 import { successResponse } from '../utils/response.js';
 import fileService from '../services/files_service.js';
+import FileValidations from '../validations/file_validations.js';
 
 export default class fileController {
   static async uploadFile(req, res, next) {
     try {
+      const { galleryId } = req.params;
       const files = req.files;
-      const galleryId = req.params.galleryId;
 
-      if (!galleryId)
-        return next(new AppError('please provide a gallery id!', 400));
-
-      if (!files) return next(new AppError('please provide a file!', 400));
+      const { error } = FileValidations.uploadFileValidation({ galleryId, files });
+      if (error) {
+        return next(new AppError(error.details[0].message, 400));
+      }
 
       for (const file of files) {
         const fileUrl = await uploadPhotoBufferToCloudinary(file.buffer);
@@ -22,7 +23,6 @@ export default class fileController {
       const allFiles = await fileService.findAllFilesByGallery(galleryId);
 
       let fileResponse = [];
-
       for (const file of allFiles) {
         fileResponse.push({
           link: file.link,
@@ -35,11 +35,15 @@ export default class fileController {
       return next(error);
     }
   }
+
   static async deleteFile(req, res, next) {
     try {
-      const fileId = req.params.fileId;
+      const { fileId } = req.params;
 
-      if (!fileId) return next(new AppError('provide a file id!', 400));
+      const { error } = FileValidations.deleteFileValidation({ fileId });
+      if (error) {
+        return next(new AppError(error.details[0].message, 400));
+      }
 
       await fileService.deleteFile(fileId);
 
